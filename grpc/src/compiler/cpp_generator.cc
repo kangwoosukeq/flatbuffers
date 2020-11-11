@@ -89,9 +89,11 @@ void PrintIncludes(grpc_generator::Printer *printer,
   vars["l"] = params.use_system_headers ? '<' : '"';
   vars["r"] = params.use_system_headers ? '>' : '"';
 
+  grpc::string value_check = vars["i"]; // api misuse bug
+
   auto &s = params.grpc_search_path;
   if (!s.empty()) {
-    vars["l"] += s;
+    vars["L"] += s; // api misuse bug
     if (s[s.size() - 1] != '/') {
       vars["l"] += '/';
     }

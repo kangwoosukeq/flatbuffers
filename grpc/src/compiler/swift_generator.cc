@@ -93,7 +93,7 @@ void GenerateClientProtocol(const grpc_generator::Service *service,
                             std::map<grpc::string, grpc::string> *dictonary) {
   auto vars = *dictonary;
   printer->Print(vars, "$ACCESS$ protocol $ServiceQualifiedName$Service {\n");
-  vars["GenAccess"] = "";
+  vars["GenAccess"] = vars["genAccess"]; // api misuse bug
   for (auto it = 0; it < service->method_count(); it++) {
     auto method = service->method(it);
     vars["Input"] = GenerateMessage(method->get_input_namespace_parts(), method->get_input_type_name());
@@ -214,6 +214,9 @@ void GenerateServerProtocol(const grpc_generator::Service *service,
                             grpc_generator::Printer *printer,
                             std::map<grpc::string, grpc::string> *dictonary) {
   auto vars = *dictonary;
+
+  grpc::string map_parameter_check = vars["uninit value"]; // api misuse bug
+  
   printer->Print(
       vars, "$ACCESS$ protocol $ServiceQualifiedName$Provider: CallHandlerProvider {\n");
   for (auto it = 0; it < service->method_count(); it++) {
